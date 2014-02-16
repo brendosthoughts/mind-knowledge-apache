@@ -1,0 +1,51 @@
+<VirtualHost *:80>
+	ServerAdmin morrison.brendan17@gmail.com
+	ServerName mind-knowledge.com
+	ServerAlias www.mind-knowledge.com
+	
+	DocumentRoot /var/www/tagmenu
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride All
+	</Directory>
+	<Directory /var/www/tagmenu>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride All
+		Order allow,deny
+		allow from all
+		<IfModule mod_rewrite.c>  
+			RewriteEngine on  
+			RewriteRule PlayVideo/([0-9]+) PlayVideo/index.php?videoID=$1
+		</IfModule>
+	</Directory>
+        <IfModule mod_rewrite.c>
+                        RewriteEngine on
+			RewriteRule /sitemap.xml /sitemaps/sitemapIndex.php
+ 			RewriteMap documentary txt:/etc/apache2/rewrite/Documentaries.txt
+			RewriteCond %{REQUEST_URI} !^/index\.php*
+			RewriteRule /Documentaries/([-0-9a-zA-Z]+)$ /PlayVideo/index.php?videoID=${documentary:$1|documentaries}
+
+                        RewriteMap debate txt:/etc/apache2/rewrite/Debates.txt
+                        RewriteCond %{REQUEST_URI} !^/index\.php*
+                        RewriteRule /Debates/([-0-9a-zA-Z]+)$ /PlayVideo/index.php?videoID=${debate:$1|debates}
+
+                        RewriteMap talks txt:/etc/apache2/rewrite/Talks.txt
+                        RewriteCond %{REQUEST_URI} !^/index\.php*
+                        RewriteRule /Talks/([-0-9a-zA-Z]+)$ /PlayVideo/index.php?videoID=${talks:$1|talks}
+
+                        RewriteMap category txt:/etc/apache2/rewrite/Category.txt
+                        RewriteCond %{REQUEST_URI} !^/index\.php*
+                        RewriteRule /Category/([-0-9a-zA-Z]+)$ /Category/index.php?id=${category:$1}
+
+                        RewriteMap subtag txt:/etc/apache2/rewrite/SubTag.txt
+                        RewriteCond %{REQUEST_URI} !^/index\.php*
+                        RewriteRule /SubTag/([-0-9a-zA-Z]+)$ /SubTag/index.php?id=${subtag:$1}
+			
+                        RewriteRule /docs-sitemap.xml /sitemaps/docs-sitemap.php
+                        RewriteRule /talks-sitemap.xml /sitemaps/talks-sitemap.php
+                        RewriteRule /debates-sitemap.xml /sitemaps/debates-sitemap.php
+                        RewriteRule /other-sitemap.xml /sitemaps/other-sitemap.php
+
+         </IfModule>
+
+</VirtualHost>
